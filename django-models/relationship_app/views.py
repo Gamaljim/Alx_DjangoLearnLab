@@ -8,6 +8,7 @@ from django.views.generic.detail import DetailView
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import permission_required
 
+
 # Create your views here.
 
 
@@ -58,3 +59,7 @@ def is_librarian(user):
 def librarian_view(request):
     return render(request, 'relationship_app/librarian_view.html')
 
+
+@permission_required('relationship_app.can_add_book')
+def can_add_book(request):
+    return render(request, 'relationship_app/add_book.html')

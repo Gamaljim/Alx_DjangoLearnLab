@@ -67,7 +67,7 @@ def can_add_book(request):
 
 @permission_required('relationship_app.can_change_book')
 def can_change_book(request):
-    return render(request, 'relationship_app/change_book.html')
+    return render(request, 'relationship_app/edit_book.html')
 
 
 @permission_required('relationship_app.can_delete_book')

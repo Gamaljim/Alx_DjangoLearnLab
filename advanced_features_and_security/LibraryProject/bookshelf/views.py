@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render
 from .models import Book
 from .models import CustomUser
-from .forms import BookForm
+from .forms import ExampleForm
 
 
 # Create your views here.
@@ -16,11 +16,11 @@ def book_list(request):
 @permission_required("bookshelf.can_create", raise_exception=True)
 def add_book(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
             form.save()
     else:
-        form = BookForm()
+        form = ExampleForm()
 
     return render(request, 'form_example.html', {'form': form})
 

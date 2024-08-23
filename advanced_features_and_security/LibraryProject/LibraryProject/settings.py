@@ -22,17 +22,31 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-fao@103s5y_w11dl1rnx@3y1vjw^#=%30retnx0x@z0aiq5k*n'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+
+# disbale dubug mode in production to prevent information leakage
 DEBUG = False
+
+# Enable browser's XSS filter to help prevent cross-site script attacks
 SECURE_BROWSER_XSS_FILTER = True
+
+# prevent clickjacking
 X_FRAME_OPTIONS = 'DENY'
+
+# Prevent MIME type sniffing
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# Ensure CSRF cookies are only sent over HTTPS
 CSRF_COOKIE_SECURE = True
+
+# Ensure session cookies are only sent over HTTPS to protect user sessions
 SESSION_COOKIE_SECURE = True
 
 ALLOWED_HOSTS = []
 
 # Application definition
+
+# adding CSP to installed apps after using pip install django-csp
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -45,6 +59,8 @@ INSTALLED_APPS = [
     'relationship_app',
     'csp',
 ]
+
+# adding csp middleware
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

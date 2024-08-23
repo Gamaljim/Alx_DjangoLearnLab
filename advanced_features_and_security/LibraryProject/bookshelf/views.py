@@ -5,14 +5,13 @@ from .models import CustomUser
 from .forms import ExampleForm
 
 
-# Create your views here.
-
+# Django ORM is used to safely retrieve all books, preventing SQL injection
 @permission_required("bookshelf.can_edit", raise_exception=True)
 def book_list(request):
     books = Book.objects.all()
     return render(request, 'book_list.html', {'books':books})
 
-
+# Validate user input using ExampleForm to prevent malicious data entry
 @permission_required("bookshelf.can_create", raise_exception=True)
 def add_book(request):
     if request.method == 'POST':

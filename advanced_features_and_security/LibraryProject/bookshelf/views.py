@@ -9,7 +9,8 @@ from .forms import BookForm
 
 @permission_required("bookshelf.can_edit", raise_exception=True)
 def book_list(request):
-    return render(request, 'book_list.html')
+    books = Book.objects.all()
+    return render(request, 'book_list.html', {'books':books})
 
 
 @permission_required("bookshelf.can_create", raise_exception=True)
@@ -21,7 +22,7 @@ def add_book(request):
     else:
         form = BookForm()
 
-    return render(request, 'add_book.html', {'form': form})
+    return render(request, 'form_example.html', {'form': form})
 
 
 @permission_required("bookshelf.can_view", raise_exception=True)

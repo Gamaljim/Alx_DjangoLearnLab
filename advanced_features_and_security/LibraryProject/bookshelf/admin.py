@@ -6,7 +6,7 @@ from .models import CustomUser
 
 
 # Register your models here.
-class CustomerUserAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
     model = CustomUser
     fieldsets = UserAdmin.fieldsets + (
         (None, {"fields": ('date_of_birth', 'profile_photo'),
@@ -14,8 +14,7 @@ class CustomerUserAdmin(UserAdmin):
     )
 
 
-admin.site.register(CustomerUserAdmin, CustomUser)
-
+admin.site.register(CustomUser, CustomUserAdmin)
 
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')

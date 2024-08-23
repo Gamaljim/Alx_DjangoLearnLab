@@ -42,6 +42,16 @@ CSRF_COOKIE_SECURE = True
 # Ensure session cookies are only sent over HTTPS to protect user sessions
 SESSION_COOKIE_SECURE = True
 
+# Redirect all HTTP requests to HTTPS to ensure secure connections
+SECURE_SSL_REDIRECT = True
+
+# Enable HTTP Strict Transport Security (HSTS) to enforce HTTPS for one year
+SECURE_HSTS_SECONDS = 31536000
+
+# Apply HSTS policy to all subdomains to ensure secure connections across the entire domain
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
 ALLOWED_HOSTS = []
 
 # Application definition

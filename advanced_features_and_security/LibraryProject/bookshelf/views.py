@@ -5,11 +5,7 @@ from .models import CustomUser
 
 
 # Create your views here.
-('can_view', 'Can View'),
-('can_create', 'Can Create'),
-('can_edit', 'Can Edit'),
-('can_delete', 'Can Delete'),
-]
+
 @permission_required("bookshelf.can_edit", raise_exception=True)
 def book_list(request):
     return render(request, 'book_list.html')

@@ -16,6 +16,7 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
+
 class BookAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'publication_year')
     search_fields = ('title', 'author', 'publication_year')

@@ -45,3 +45,11 @@ class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
     publication_year = models.IntegerField()
+
+    class Meta:
+        permissions = [
+            ('can_view', 'Can View'),
+            ('can_create', 'Can Create'),
+            ('can_edit', 'Can Edit'),
+            ('can_delete', 'Can Delete'),
+        ]

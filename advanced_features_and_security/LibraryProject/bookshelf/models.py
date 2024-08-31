@@ -35,10 +35,12 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    date_of_birth = models.DateField(null=True, blank=True)
+    date_of_birth = models.DateField()
     profile_photo = models.ImageField()
 
     objects = CustomUserManager()
+
+    REQUIRED_FIELDS = ['date_of_birth']
 
 
 class Book(models.Model):

@@ -12,5 +12,5 @@ router.register(r'books', BookViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     #path('api/books/', BookList.as_view(), name='books'),
-    path('api-token-auth', obtain_auth_token, name='api-token-auth')
+    path('api-token-auth/', obtain_auth_token, name='api-token-auth')
 ]

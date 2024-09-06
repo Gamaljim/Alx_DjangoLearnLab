@@ -23,3 +23,24 @@ class BookAPITests(APITestCase):
         response = self.client.post(self.create_url, data)
         self.assertEquals(response.status_code, 201)
         self.assertEquals(Book.objects.get(pk=response.data['id']).title, 'New Test Book')
+
+    def test_update_book_authenticated(self):
+        self.client.login(username='testuser', password='testpass123')
+        update_date = {'id': self.book.pk, 'title': 'Updated Test Book'}
+        response = self.client.patch(self.update_url, update_date)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(self.book.title, 'Updated Test Book')
+
+    def test_delete_book_authenticated(self):
+        self.client.login(username='testuser', password='testpass123')
+        delete_date = {'id': self.book.pk}
+        response = self.client.delete(self.delete_url, delete_date)
+        self.assertEquals(response.status_code, 204)
+
+    def test_book_detail_view_permissions(self):
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

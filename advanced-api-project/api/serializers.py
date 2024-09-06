@@ -12,7 +12,7 @@ class BookSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "publication_year", "author"]
 
     def validate_publication_year(self, value):
-        now = timezone.now().year()
+        now = timezone.now().year
         if value > now:
             raise serializers.ValidationError("Publication Year can't be in the Future")
         return value

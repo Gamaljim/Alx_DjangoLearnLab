@@ -1,13 +1,11 @@
-from rest_framework import generics
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-from .serializers import BookSerializer
-from .models import Book
+# Explaining Each View 
 
+#Added django-filter in INSTALLED APPS
+#added needed settings for the filter to work
 
-# Create your views here.
-
-
+#REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
 
 class BookListView(generics.ListAPIView):
     """
@@ -19,48 +17,27 @@ class BookListView(generics.ListAPIView):
         *imported DjangoFilterBackend
         *and added the fields i want to filter
     """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['title', 'publication_year', 'author']
-
 
 class BookDetailView(generics.RetrieveAPIView):
     """
         Provides a read-only list of a single book.
         * Only authenticated users are allowed to access this view or they will be allowed to READ it only.
     """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
 
 class BookCreateView(generics.CreateAPIView):
     """
         Provides a create API point for the Book.
         * Only authenticated users are allowed to access this view.
     """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
-
 
 class BookUpdateView(generics.UpdateAPIView):
     """
         Provides a Update API point for a single Book.
         * Only authenticated users are allowed to access this view.
     """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]
-
 
 class BookDeleteView(generics.DestroyAPIView):
     """
         Provides a Delete API point for the Book.
         * Only authenticated users are allowed to access this view.
     """
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated]

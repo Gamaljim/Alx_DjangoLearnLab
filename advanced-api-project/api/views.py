@@ -18,6 +18,23 @@ class BookListView(generics.ListAPIView):
         *added it in INSTALLED APPS and added the settings needed
         *imported DjangoFilterBackend
         *and added the fields i want to filter
+        **Filtering**:
+        - Enabled via DjangoFilterBackend.
+        - Fields: `title`, `publication_year`, `author`
+        - Example: `/api/books/?title=Python&publication_year=2021`
+
+        **Searching**:
+        - Enabled via SearchFilter.
+        - Fields: `title`, `author__name` (author's name)
+        - Example: `/api/books/?search=Python` searches in book titles and author names.
+
+        **Ordering**:
+        - Enabled via OrderingFilter.
+        - Fields: `title`, `publication_year`
+        - Example: `/api/books/?ordering=publication_year` for ascending order,
+          `/api/books/?ordering=-publication_year` for descending order.
+
+
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer

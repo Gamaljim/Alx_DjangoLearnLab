@@ -58,7 +58,6 @@ class BookDetailView(generics.RetrieveAPIView):
     ordering_fields = ['title', 'publication_year']
 
 
-
 class BookCreateView(generics.CreateAPIView):
     """
         Provides a create API point for the Book.

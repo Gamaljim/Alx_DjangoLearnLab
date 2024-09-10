@@ -27,7 +27,7 @@ def profile_update(request, pk):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            return redirect('profile')
+            return redirect('profile', pk=request.user.pk)
 
     else:
         user_form = UserEditForm(instance=user)

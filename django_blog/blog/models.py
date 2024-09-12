@@ -15,7 +15,17 @@ class Post(models.Model):
         return self.title
 
 
+
 class Profile(models.Model):
+    """
+    Profile model for storing additional user information.
+        Attributes:
+            user (User): One-to-one relationship linking back to Django's User model.
+            bio (str): Optional biographical description for the user's profile.
+            profile_picture (ImageField): Optional field for a profile image.
+        The model uses Django's built-in ImageField which requires Pillow to be installed.
+    """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True)
     profile_picture = models.ImageField(blank=True, null=True)
@@ -26,10 +36,16 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def create_profile(sender, instance, created, **kwargs):
+    """
+        Signal to create a Profile instance automatically upon user creation.
+    """
     if created:
         Profile.objects.create(user=instance)
 
 
 @receiver(post_save, sender=User)
 def save_profile(sender, instance, **kwargs):
+    """
+        Signal to save the Profile instance whenever a User instance is saved.
+    """
     instance.profile.save()

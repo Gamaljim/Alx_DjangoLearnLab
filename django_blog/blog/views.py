@@ -1,4 +1,6 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -21,6 +23,7 @@ class RegisterView(CreateView):
     success_url = reverse_lazy('login')
 
 
+@login_required
 def profile_update(request, pk):
     """
       A view function for updating a user's profile.

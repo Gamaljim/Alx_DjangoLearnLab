@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm, PostCreateEditForm
 from .models import Post, Profile
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 
 class RegisterView(CreateView):
@@ -62,11 +62,35 @@ def profile_update(request, pk):
 
 class PostListView(ListView):
     model = Post
-    template_name = 'blog/posts.html'
+    template_name = 'blog/post_list.html'
     context_object_name = 'posts'
 
 
 class PostDetailView(DetailView):
     model = Post
-    template_name = 'blog/post.html'
+    template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
+
+class PostCreateView(CreateView):
+    model = Post
+    form_class = PostCreateEditForm
+    template_name = "blog/post_create.html"
+    success_url = reverse_lazy('post_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostCreateEditForm
+    template_name = "blog/post_update.html"
+    success_url = reverse_lazy('post_list')
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+    template_name = "blog/post_delete.html"
+    success_url = reverse_lazy('post_list')

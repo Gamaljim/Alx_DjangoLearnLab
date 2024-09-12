@@ -6,5 +6,9 @@
     <p>{{ post.content }}</p>
     <p><strong>Author:</strong> {{ post.author }}</p>
     <p><strong>Posted on:</strong> {{ post.created_at|date:"Y-m-d H:i" }}</p>
+    <a href="{%url 'post_update' post.pk %}">Update Post</a>
+    <a href="{%url 'post_delete' post.pk %}">Delete Post</a>
+
+
 </div>
 {% endblock content %}

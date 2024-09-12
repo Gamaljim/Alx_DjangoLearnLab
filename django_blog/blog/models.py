@@ -15,7 +15,6 @@ class Post(models.Model):
         return self.title
 
 
-
 class Profile(models.Model):
     """
     Profile model for storing additional user information.

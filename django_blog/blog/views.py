@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm, PostCreateEditForm
-from .models import Post, Profile
+from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm, PostCreateEditForm, CommentForm
+from .models import Post, Comment
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 
@@ -136,3 +136,24 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         post = self.get_object()
         return post.author == self.request.user
+
+
+class CommentCreateView(CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comments_create.html"
+
+    def form_valid(self, form):
+        form.instance.post = Post.objects.get(id=self.kwargs['pk'])
+        form.instance.author = self.request.user
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['pk']})
+
+
+class CommentListView(ListView):
+    model = Comment
+    template_name = 'blog/comments_list.html'
+    context_object_name = 'comments'

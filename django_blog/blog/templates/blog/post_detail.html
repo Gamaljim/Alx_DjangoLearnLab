@@ -8,6 +8,9 @@
     <p><strong>Posted on:</strong> {{ post.created_at|date:"Y-m-d H:i" }}</p>
     <a href="{%url 'post_update' post.pk %}">Update Post</a>
     <a href="{%url 'post_delete' post.pk %}">Delete Post</a>
+    <a href="{%url 'comment_create' post.pk %}">Add Comment</a>
+    <br><br>
+
 
 
 </div>

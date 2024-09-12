@@ -13,8 +13,12 @@
         <nav>
             <ul>
                 <li><a href="{#}">Home</a></li>
-                <li><a href="{#}">Blog Posts</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'posts' %}">Blog Posts</a></li>
+                {%if user.is_authenticated%}
+                <li><a href="{% url 'login' %}">Logout</a></li>
+                {%else%}
+                <li><a href="{% url 'logout' %}">Login</a></li>
+                {%endif%}
                 <li><a href="{% url 'register' %}">Register</a></li>
             </ul>
         </nav>

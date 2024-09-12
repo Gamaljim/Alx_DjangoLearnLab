@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Profile
+from .models import Profile, Post
+
 
 
 # extending the UserCreationForm to include Email as its part of the User model , overriding the save method so when
@@ -55,3 +56,9 @@ class ProfileEditForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['bio', 'profile_picture']
+
+
+class PostCreateEditForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['title', 'content']

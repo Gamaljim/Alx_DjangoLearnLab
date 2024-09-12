@@ -2,9 +2,9 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm
+from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm, PostCreateEditForm
 from .models import Post, Profile
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView, DetailView
 
 
 class RegisterView(CreateView):
@@ -18,8 +18,6 @@ class RegisterView(CreateView):
     form_class = CustomerUserCreationForm
     template_name = 'blog/register.html'
     success_url = reverse_lazy('login')
-
-
 
 
 def profile_update(request, pk):
@@ -41,9 +39,9 @@ def profile_update(request, pk):
     user = User.objects.get(id=pk)
     profile = user.profile
 
-    if request.method =='POST':
+    if request.method == 'POST':
         user_form = UserEditForm(request.POST, instance=user)
-        profile_form = ProfileEditForm(request.POST, request.FILES,instance=profile)
+        profile_form = ProfileEditForm(request.POST, request.FILES, instance=profile)
 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
@@ -59,4 +57,16 @@ def profile_update(request, pk):
         'profile_form': profile_form
     }
 
-    return render(request , 'blog/edit_profile.html', context=context)
+    return render(request, 'blog/edit_profile.html', context=context)
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/posts.html'
+    context_object_name = 'posts'
+
+
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'blog/post.html'
+    context_object_name = 'post'

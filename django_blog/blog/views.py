@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -61,18 +62,32 @@ def profile_update(request, pk):
 
 
 class PostListView(ListView):
+    """
+        Displays a list of all the posts with a custom object name
+         so its easy to loop on all posts instead of object name
+         no authentication and accessible to everyone
+    """
     model = Post
     template_name = 'blog/post_list.html'
     context_object_name = 'posts'
 
 
 class PostDetailView(DetailView):
+    """
+        Displays single post with a custom object name
+         no authentication and accessible to everyone
+    """
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
 
 
 class PostCreateView(CreateView):
+    """
+        create a Post using the PostCreateEditForm , with a template name
+        and using reverse lazy to the main page upon Creating
+        overriding the form_valid method to auto assign author to be the logged in user
+    """
     model = Post
     form_class = PostCreateEditForm
     template_name = "blog/post_create.html"
@@ -83,14 +98,38 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+        Update a Post using the PostCreateEditForm , with a template name
+        and using reverse lazy to the main page upon updating
+        only logged in users are allowed to update posts using LogginRequiredMixin,
+        and every user can only update his own posts using UserPassesTestMixin by using test_func
+        getting the post using self.get_objects then return True of False based if the post.author is the same as
+        the logged in user
+    """
     model = Post
     form_class = PostCreateEditForm
     template_name = "blog/post_update.html"
     success_url = reverse_lazy('post_list')
 
+    def test_func(self):
+        post = self.get_object()
+        return post.author == self.request.user
 
-class PostDeleteView(DeleteView):
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+        Delete a Post , with a template name
+        and using reverse lazy to the main page upon Deleting
+        only logged in users are allowed to delete posts using LogginRequiredMixin,
+        and every user can only delete his own posts using UserPassesTestMixin by using test_func
+        getting the post using self.get_objects then return True of False based if the post.author is the same as
+        the logged in user
+    """
     model = Post
     template_name = "blog/post_delete.html"
     success_url = reverse_lazy('post_list')
+
+    def test_func(self):
+        post = self.get_object()
+        return post.author == self.request.user

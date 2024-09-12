@@ -4,10 +4,6 @@ from django import forms
 from .models import Profile, Post
 
 
-
-# extending the UserCreationForm to include Email as its part of the User model , overriding the save method so when
-# a user is created i have commit=False it waits till i add the email using cleaned data then saving the User and
-# returning it with the email included
 class CustomerUserCreationForm(UserCreationForm):
     """
        A form that extends the default UserCreationForm to include an email field.
@@ -23,8 +19,7 @@ class CustomerUserCreationForm(UserCreationForm):
     def save(self, commit=True):
         """
             Extends the save method to handle the email field explicitly.
-            Args:
-                commit (bool): If True, saves the user to the database immediately. Defaults to True.
+            commit (bool): If True, saves the user to the database immediately. Defaults to True.
             Returns:
                 User: The user instance with email set.
             The email is extracted from the cleaned_data dictionary before saving the User instance.
@@ -42,6 +37,7 @@ class UserEditForm(forms.ModelForm):
 
     Allows editing of 'username' and 'email'.
     """
+
     class Meta:
         model = User
         fields = ['username', 'email']
@@ -53,12 +49,18 @@ class ProfileEditForm(forms.ModelForm):
 
     Allows editing of 'bio' and 'profile_picture'.
     """
+
     class Meta:
         model = Profile
         fields = ['bio', 'profile_picture']
 
 
 class PostCreateEditForm(forms.ModelForm):
+    """
+        using modelForm to create a Form to either create or Update a Post using the Post model
+        allowed field to edit are title and content as the author is automatically set to the logged in user
+        and published_date are auto now add which is auto created upon post creation
+    """
     class Meta:
         model = Post
         fields = ['title', 'content']

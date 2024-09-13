@@ -19,8 +19,8 @@
             <p>Posted on: {{ comment.created_at|date:"M d, P" }}</p>
             <p>Last Update: {{ comment.updated_at|date:"M d, P" }}</p>
             {% if comment.author == request.user %}
-                <a href="{% url 'comment_update' post_id=comment.post.pk pk=comment.pk %}">Update Comment</a>
-                <a href="{% url 'comment_delete' post_id=comment.post.pk pk=comment.pk %}">Delete comment</a>
+                <a href="{% url 'comment_update' pk=comment.pk %}">Update Comment</a>
+                <a href="{% url 'comment_delete' pk=comment.pk %}">Delete comment</a>
             {% endif %}
             <br><br>
         </div>

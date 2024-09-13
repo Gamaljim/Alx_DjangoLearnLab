@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from .forms import CustomerUserCreationForm, UserEditForm, ProfileEditForm, PostCreateEditForm, CommentForm
 from .models import Post, Comment
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.db.models import Q
 
 
 class RegisterView(CreateView):
@@ -21,6 +22,22 @@ class RegisterView(CreateView):
     form_class = CustomerUserCreationForm
     template_name = 'blog/register.html'
     success_url = reverse_lazy('login')
+
+
+def search(request):
+    searched = request.GET.get('searched', '')
+    if 'searched' in request.GET:
+        searched = request.GET['searched']
+        multiple_q = Q(
+            Q(title__icontains=searched) | Q(tags__name__icontains=searched) | Q(content__icontains=searched))
+        posts = Post.objects.filter(multiple_q)
+    else:
+        posts = Post.objects.all()
+    return render(request, 'blog/search.html', {'posts': posts, 'searched': searched})
+
+
+def home(request):
+    return render(request, "blog/home.html")
 
 
 @login_required
@@ -112,6 +129,7 @@ class PostCreateView(CreateView):
 class TaggedPostListView(ListView):
     model = Post
     template_name = 'blog/tagged_posts_list.html'  # Your template here
+    context_object_name = 'posts'
 
     def get_queryset(self):
         return Post.objects.filter(tags__name__in=[self.kwargs['tag_name']])

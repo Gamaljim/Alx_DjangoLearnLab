@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from django.forms import TextInput
-from taggit.forms import TagField, TagWidget
+\from taggit.forms import TagField, TagWidget
+from django.forms import widgets
 
 from .models import Profile, Post, Comment
 
@@ -68,7 +68,7 @@ class PostCreateEditForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags','widgets']
+        fields = ['title', 'content', 'tags']
 
 
 class CommentForm(forms.ModelForm):

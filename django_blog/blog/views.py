@@ -147,6 +147,20 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
+    """
+        Class to create Comments using CreateView , taking the Comment Model
+        using CommentForm to handle the Comment creation ,
+        overriding the form_valid to auto assign the post and the author to the comment
+
+        Using form.instance to get the comment then .post to assign  its related post
+        then getting Post.objects.get(id=self.kwargs['pk'] to get the post id from the URL
+
+        using form.instance to get the comment then .author to assign its author
+        then using self.request.user to assign it to the logged in user
+
+        overriding the get_success_url using to be able to redirect to the related post
+        using kwargs={'pk' , self.kwargs['pk'} to again assign the pk to the post from URL
+    """
     model = Comment
     form_class = CommentForm
     template_name = "blog/comments_create.html"
@@ -162,6 +176,15 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
 
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    """
+        Class to update the comment, using the same form_class and taking the comment model
+        no need to assign the post or the author again as its already assigned because we r updating a comment
+        over riding the success_url using kwargs={'pk':self.object.post.pk} self.object refering to the comment
+        and .post.pk to get the related post pk as its not in the URL now
+
+        using loginrequiredmixin to allow only logged in user to update comment and userpassestest mixing
+        with test_func that returns true only if the comment author is the same as logged in user
+    """
     model = Comment
     form_class = CommentForm
     template_name = "blog/comment_update.html"
@@ -175,6 +198,10 @@ class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """
+        Delete a comment with over riding the success url and using authentication with login required
+        and user passes test to only allow same user to delete his own comments
+    """
     model = Comment
     template_name = "blog/comment_delete.html"
 
@@ -184,3 +211,5 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return comment.author == self.request.user
+
+

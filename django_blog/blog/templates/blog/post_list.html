@@ -9,6 +9,7 @@
     {% for post in posts %}
 
     <a href="{%url 'post_detail' post.pk %}"><p><strong>Title:</strong> {{ post.title }}</p></a>
+    <p><strong>Tags:</strong> {{ post.tags.names }}</p>
     <p><strong>Content:</strong> {{ post.content }}</p>
     <p><strong>Author:</strong> {{ post.author }}</p>
     <p><strong>Posted on:</strong> {{ post.published_date|date:"Y-m-d H:i" }}</p>

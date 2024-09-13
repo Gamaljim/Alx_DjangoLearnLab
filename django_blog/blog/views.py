@@ -126,17 +126,17 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-class TaggedPostListView(ListView):
+class PostByTagListView(ListView):
     model = Post
     template_name = 'blog/tagged_posts_list.html'  # Your template here
     context_object_name = 'posts'
 
     def get_queryset(self):
-        return Post.objects.filter(tags__name__in=[self.kwargs['tag_name']])
+        return Post.objects.filter(tags__name__in=[self.kwargs['tag_slug']])
 
     def get_context_data(self, **kwargs):
-        context = super(TaggedPostListView, self).get_context_data(**kwargs)
-        context['tag_name'] = self.kwargs['tag_name']
+        context = super(PostByTagListView, self).get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs['tag_slug']
         return context
 
 

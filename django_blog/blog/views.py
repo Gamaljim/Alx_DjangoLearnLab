@@ -167,4 +167,12 @@ class CommentUpdateView(UpdateView):
     template_name = "blog/comment_update.html"
 
     def get_success_url(self):
-        return reverse_lazy('post_detail', kwargs={'pk':self.object.post.pk})
+        return reverse_lazy('post_detail', kwargs={'pk': self.object.post.pk})
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+    template_name = "blog/comment_delete.html"
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={"pk": self.object.post.pk})

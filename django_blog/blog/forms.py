@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
 from django.forms import TextInput
-from taggit.forms import TagField
+from taggit.forms import TagField, TagWidget
 
 from .models import Profile, Post, Comment
 
@@ -64,10 +64,11 @@ class PostCreateEditForm(forms.ModelForm):
         allowed field to edit are title and content as the author is automatically set to the logged in user
         and published_date are auto now add which is auto created upon post creation
     """
-    tags = TagField()
+    tags = TagField(widget=TagWidget())
+
     class Meta:
         model = Post
-        fields = ['title', 'content','tags']
+        fields = ['title', 'content', 'tags']
 
 
 class CommentForm(forms.ModelForm):

@@ -109,6 +109,19 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
+class TaggedPostListView(ListView):
+    model = Post
+    template_name = 'blog/tagged_posts_list.html'  # Your template here
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__name__in=[self.kwargs['tag_name']])
+
+    def get_context_data(self, **kwargs):
+        context = super(TaggedPostListView, self).get_context_data(**kwargs)
+        context['tag_name'] = self.kwargs['tag_name']
+        return context
+
+
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """
         Update a Post using the PostCreateEditForm , with a template name
@@ -211,5 +224,3 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         comment = self.get_object()
         return comment.author == self.request.user
-
-

@@ -78,11 +78,19 @@ class PostListView(ListView):
 class PostDetailView(DetailView):
     """
         Displays single post with a custom object name
-         no authentication and accessible to everyone
+         no authentication and accessible to everyone,
+         adding get_context_data so i can dynamically load the CommentForm in the Detail post
+         to make it easier to add comments
     """
     model = Post
     template_name = 'blog/post_detail.html'
     context_object_name = 'post'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['comment_form'] = CommentForm()
+        context['comments'] = self.object.comments.all().order_by('-created_at')
+        return context
 
 
 class PostCreateView(CreateView):
@@ -153,7 +161,10 @@ class CommentCreateView(CreateView):
         return reverse_lazy('post_detail', kwargs={'pk': self.kwargs['pk']})
 
 
-class CommentListView(ListView):
+class CommentUpdateView(UpdateView):
     model = Comment
-    template_name = 'blog/comments_list.html'
-    context_object_name = 'comments'
+    form_class = CommentForm
+    template_name = "blog/comment_update.html"
+
+    def get_success_url(self):
+        return reverse_lazy('post_detail', kwargs={'pk':self.object.post.pk})

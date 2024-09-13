@@ -8,10 +8,30 @@
     <p><strong>Posted on:</strong> {{ post.created_at|date:"Y-m-d H:i" }}</p>
     <a href="{%url 'post_update' post.pk %}">Update Post</a>
     <a href="{%url 'post_delete' post.pk %}">Delete Post</a>
-    <a href="{%url 'comment_create' post.pk %}">Add Comment</a>
     <br><br>
 
+<section class="comments">
+        <h2>Comments</h2>
+        {% for comment in comments %}
+        <div class="comment">
+            <strong>{{ comment.author.username }} Commented:</strong>
+            <p>{{ comment.content }}</p>
+            <p>Posted on: {{ comment.created_at|date:"M d, P" }}</p>
+            <p>Last Update: {{ comment.updated_at|date:"M d, P" }}</p>
+            {% if comment.author == request.user %}
+                <a href="{% url 'comment_update' post_pk=comment.post.pk pk=comment.pk %}">Update Comment</a>
+            {% endif %}
+            <br><br>
+        </div>
+        {% empty %}
+        <p>No comments yet.</p>
+        {% endfor %}
+    </section>
 
-
+<form action="{% url 'comment_create' post.pk %}" method="post">
+    {%csrf_token%}
+    {{comment_form.as_p}}
+    <button type="submit">Add Comment</button>
+</form>
 </div>
 {% endblock content %}

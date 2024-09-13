@@ -64,10 +64,11 @@ class PostCreateEditForm(forms.ModelForm):
         allowed field to edit are title and content as the author is automatically set to the logged in user
         and published_date are auto now add which is auto created upon post creation
     """
-    tags = TagField(widget=TagWidget())
+    widgets = TagField(widget=TagWidget())
+
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags']
+        fields = ['title', 'content', 'widgets']
 
 
 class CommentForm(forms.ModelForm):

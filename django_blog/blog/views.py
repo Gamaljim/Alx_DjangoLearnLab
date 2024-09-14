@@ -25,6 +25,12 @@ class RegisterView(CreateView):
 
 
 def search(request):
+    """
+        first we get searched which is either a query or none
+        we check if searched , we get it using request.GET['searched']
+        then using Q to be able to have multiple search queries at once either by the title, content or the tag naame
+        and we filter that , then we return it into context
+    """
     searched = request.GET.get('searched', '')
     if 'searched' in request.GET:
         searched = request.GET['searched']
@@ -127,8 +133,15 @@ class PostCreateView(CreateView):
 
 
 class PostByTagListView(ListView):
+    """
+        a view to return posts by specific tags
+        using Post model and posts as object_name
+        i override the get_quertyset so i can filter the query by only the posts with the tags in the tag_slug
+        and overriding the context_data to pass in extra information which is the tag_name
+        so i can use it in the template saying Posts tagged with {{tag_name}}
+    """
     model = Post
-    template_name = 'blog/tagged_posts_list.html'  # Your template here
+    template_name = 'blog/tagged_posts_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):

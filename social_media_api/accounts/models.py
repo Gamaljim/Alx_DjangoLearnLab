@@ -8,7 +8,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError('email is required')
-        user = self.model(email=self.normmalize_email(email), **extra_fields)
+        user = self.model(email=self.normalize_email(email), **extra_fields)
         user.set_password(password)
         user.save(using=self.db)
         return user
@@ -29,7 +29,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.TextField(max_length=250)
     profile_picture = models.ImageField(blank=True, null=True)
-    followers = models.ManyToManyField('CustomUser', symmetrical=False)
+    followers = models.ManyToManyField('self', symmetrical=False, related_name='following')
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

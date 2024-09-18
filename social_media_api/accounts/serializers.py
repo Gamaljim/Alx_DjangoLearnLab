@@ -23,5 +23,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class TokenSerializer(serializers.ModelSerializer):
+class TokenSerializer(serializers.Serializer):
     token = serializers.CharField()

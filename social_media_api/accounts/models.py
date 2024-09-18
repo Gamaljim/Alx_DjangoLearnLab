@@ -26,9 +26,10 @@ class UserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
+    email = models.EmailField(unique=True)
     bio = models.TextField(max_length=250)
     profile_picture = models.ImageField(blank=True, null=True)
-    followers = models.ManyToManyField('followers')
+    followers = models.ManyToManyField('CustomUser', symmetrical=False)
 
     objects = UserManager()
     USERNAME_FIELD = 'email'

@@ -16,7 +16,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         user = get_user_model().objects.create_user(
             email=validated_data['email'],
             password=validated_data['password'],
-            bio=validated_data['bio'],
+            bio=validated_data.get('bio', None),
             profile_picture=validated_data.get('profile_picture', None)
         )
         Token.objects.create(user=user)

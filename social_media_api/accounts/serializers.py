@@ -25,3 +25,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField()
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'bio', 'profile_picture', 'followers']
+        read_only_fields = ['email', 'followers']

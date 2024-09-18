@@ -1,8 +1,8 @@
-from rest_framework import generics, status
+from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .serializers import RegisterSerializer, TokenSerializer
+from .serializers import RegisterSerializer, TokenSerializer, ProfileSerializer
 from django.contrib.auth import get_user_model
 
 # Create your views here.
@@ -36,3 +36,11 @@ class LoginView(generics.GenericAPIView):
             token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         return Response({'error': 'invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileView(generics.RetrieveUpdateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user

@@ -24,4 +24,4 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class TokenSerializer(serializers.ModelSerializer):
-    token = serializers.CharField(max_length=255)
+    token = serializers.CharField()

@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 
 
 class CustomUser(AbstractUser):
-    bio = models.CharField(max_length=250)
+    bio = models.TextField(max_length=250)
     profile_picture = models.ImageField(blank=True, null=True)
     followers = models.ManyToManyField('followers')
 

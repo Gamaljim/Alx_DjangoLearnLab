@@ -40,7 +40,7 @@ class LoginView(generics.GenericAPIView):
 
 class ProfileView(generics.RetrieveUpdateAPIView):
     serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user

@@ -24,3 +24,15 @@ class RegisterView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
 
 
+class LoginView(generics.GenericAPIView):
+    serializer_class = TokenSerializer
+
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(email=email, password=password)
+
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key})
+        return Response({'error': 'invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)

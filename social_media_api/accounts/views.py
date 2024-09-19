@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -48,19 +49,36 @@ class ProfileView(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-class CustomUserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = FollowSerializer
+class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=True, methods=['POST'])
-    def follow_user(self, request, pk=None):
-        user_to_follow = self.get_object()
+    def post(self, request, *args, **kwargs):
+        user_to_follow = get_object_or_404(CustomUser, user=id)
         request.user.follow(user_to_follow)
-        return Response({'status': f"you are now following {user_to_follow.email}"}, status=status.HTTP_200_OK)
+        return Response({'status': f"You are now following {user_to_follow.email}"}, status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['POST'])
-    def unfollow_user(self, request, pk=None):
-        user_to_unfollow = self.get_object()
+
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        user_to_unfollow = get_object_or_404(CustomUser, user=id)
         request.user.unfollow(user_to_unfollow)
-        return Response({'status': f'you have unfollowed {user_to_unfollow.email}'}, status=status.HTTP_200_OK)
+        return Response({'status': f"You have unfollowed {user_to_unfollow.email}"}, status=status.HTTP_200_OK)
+
+# class CustomUserViewSet(viewsets.ModelViewSet):
+#     queryset = CustomUser.objects.all()
+#     serializer_class = FollowSerializer
+#     permission_classes = [permissions.IsAuthenticated]
+#
+#     @action(detail=True, methods=['POST'])
+#     def follow_user(self, request, pk=None):
+#         user_to_follow = self.get_object()
+#         request.user.follow(user_to_follow)
+#         return Response({'status': f"you are now following {user_to_follow.email}"}, status=status.HTTP_200_OK)
+#
+#     @action(detail=True, methods=['POST'])
+#     def unfollow_user(self, request, pk=None):
+#         user_to_unfollow = self.get_object()
+#         request.user.unfollow(user_to_unfollow)
+#         return Response({'status': f'you have unfollowed {user_to_unfollow.email}'}, status=status.HTTP_200_OK)

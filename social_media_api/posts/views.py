@@ -1,6 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.exceptions import PermissionDenied
 from django_filters.rest_framework import DjangoFilterBackend
+from django_filters import rest_framework
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .serializers import PostSerializer, CommentSerializer
 from .models import Post, Comment
@@ -13,6 +15,9 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['title', 'content']
+    search_fields = ['title', 'content']
 
     def get_object(self):
         post = super().get_object()
@@ -27,6 +32,9 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [rest_framework.DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['title', 'content']
+    search_fields = ['title', 'content']
 
     def get_object(self):
         comment = super().get_object()

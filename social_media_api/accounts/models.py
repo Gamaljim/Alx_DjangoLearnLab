@@ -35,3 +35,15 @@ class CustomUser(AbstractUser):
     objects = UserManager()
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
+
+    def follow(self, user):
+        self.following.add(user)
+
+    def unfollow(self, user):
+        self.following.remove(user)
+
+    def is_following(self, user):
+        self.following.filter(id=user.id).exists()
+
+    def is_followed_by(self, user):
+        self.followers.filter(id=user.id).exists()

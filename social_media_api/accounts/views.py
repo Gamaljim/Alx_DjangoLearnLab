@@ -1,9 +1,11 @@
-from rest_framework import generics, status, permissions
+from rest_framework import generics, status, permissions, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .serializers import RegisterSerializer, TokenSerializer, ProfileSerializer
+from .serializers import RegisterSerializer, TokenSerializer, ProfileSerializer, FollowSerializer
 from django.contrib.auth import get_user_model
+from .models import CustomUser
 
 # Create your views here.
 User = get_user_model()
@@ -44,3 +46,21 @@ class ProfileView(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+
+class CustomUserViewSet(viewsets.ModelViewSet):
+    queryset = CustomUser.objects.all()
+    serializer_class = FollowSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    @action(detail=True, method=['POST'])
+    def follow_user(self, request, pk=None):
+        user_to_follow = self.get_object()
+        request.user.follow(user_to_follow)
+        return Response({'status': f"you are now following {user_to_follow.email}"}, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['POST'])
+    def unfollow_user(self, request, pk=None):
+        user_to_unfollow = self.get_object()
+        request.user.unfollow(user_to_unfollow)
+        return Response({'status': f'you have unfollowed {user_to_unfollow.email}'}, status=status.HTTP_200_OK)

@@ -21,7 +21,7 @@ class CommentSerializer(serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.email')
     created_at = serializers.ReadOnlyField()
     updated_at = serializers.ReadOnlyField()
-    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
+    post = serializers.SlugRelatedField(slug_field='title', queryset=Post.objects.all())
     
     class Meta:
         model = Comment

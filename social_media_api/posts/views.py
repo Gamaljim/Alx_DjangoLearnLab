@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, generics, permissions
 from rest_framework.exceptions import PermissionDenied
 from django_filters import rest_framework
 from rest_framework import filters
@@ -42,3 +42,14 @@ class CommentViewSet(viewsets.ModelViewSet):
             if comment.author != self.request.user:
                 raise PermissionDenied('You do not have permission to modify this comment')
         return comment
+
+
+class FeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        following_users = user.following.all()
+
+        return Post.objects.filter(author__in=following_users).order_by('-created_at')

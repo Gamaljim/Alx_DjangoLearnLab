@@ -53,7 +53,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    @action(detail=True, method=['POST'])
+    @action(detail=True, methods=['POST'])
     def follow_user(self, request, pk=None):
         user_to_follow = self.get_object()
         request.user.follow(user_to_follow)

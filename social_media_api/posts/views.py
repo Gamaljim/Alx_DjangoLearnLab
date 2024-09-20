@@ -63,21 +63,20 @@ class LikePostView(APIView):
 
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
-        user = request.user
 
-        like , create = Like.objects.get_or_create(post=post, user=user)
+        like, create = Like.objects.get_or_create(post=post, user=request.user)
 
         if not create:
-            return Response({'error':'you have already liked this post'}, status= status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'you have already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
 
         Notification.objects.create(
             recipient=post.author,
-            actor= user,
-            verb = 'liked',
+            actor=request.user,
+            verb='liked',
             target=post
         )
 
-        return Response({'status':'Post Liked'}, status=status.HTTP_201_CREATED)
+        return Response({'status': 'Post Liked'}, status=status.HTTP_201_CREATED)
 
 
 class UnlikePostView(APIView):
@@ -85,12 +84,11 @@ class UnlikePostView(APIView):
 
     def post(self, request, pk):
         post = generics.get_object_or_404(Post, pk=pk)
-        user = request.user
 
-        like = Like.objects.filter(user=user,post=post).first()
+        like = Like.objects.filter(user=request.user, post=post).first()
         if not like:
-            return Response({'error':'you have not liked this post'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'you have not liked this post'}, status=status.HTTP_400_BAD_REQUEST)
 
         like.delete()
 
-        return Response({'status':'Post Unliked'}, status=status.HTTP_200_OK)
+        return Response({'status': 'Post Unliked'}, status=status.HTTP_200_OK)

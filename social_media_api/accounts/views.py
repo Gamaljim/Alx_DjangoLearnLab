@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from .serializers import RegisterSerializer, TokenSerializer, ProfileSerializer, FollowSerializer
 from django.contrib.auth import get_user_model
 from .models import CustomUser
+from notifications.models import Notification
 
 # Create your views here.
 User = get_user_model()
@@ -54,6 +55,13 @@ class FollowUserView(generics.GenericAPIView):
     def post(self, request, user_id):
         user_to_follow = get_object_or_404(CustomUser, id=user_id)
         request.user.follow(user_to_follow)
+
+        Notification.objects.create(
+            recipient=user_to_follow,
+            actor=request.user,
+            verb='followed',
+            target=user_to_follow
+        )
         return Response({'status': f"You are now following {user_to_follow.email}"}, status=status.HTTP_200_OK)
 
 
@@ -63,6 +71,14 @@ class UnfollowUserView(generics.GenericAPIView):
     def post(self, request, user_id):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
         request.user.unfollow(user_to_unfollow)
+
+        Notification.objects.create(
+            recipient=user_to_unfollow,
+            actor=request.user,
+            verb='unfollowed',
+            target=user_to_unfollow
+        )
+
         return Response({'status': f"You have unfollowed {user_to_unfollow.email}"}, status=status.HTTP_200_OK)
 
 # class CustomUserViewSet(viewsets.ModelViewSet):

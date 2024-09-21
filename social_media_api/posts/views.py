@@ -91,4 +91,11 @@ class UnlikePostView(APIView):
 
         like.delete()
 
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb='unliked',
+            target=post
+        )
+
         return Response({'status': 'Post Unliked'}, status=status.HTTP_200_OK)

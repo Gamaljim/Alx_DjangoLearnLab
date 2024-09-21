@@ -9,7 +9,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 class Notification(models.Model):
     recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications')
     actor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='actor_notifications')
-    verb = models.CharField()
+    verb = models.CharField(max_length=150)
 
     target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True)
     target_object_id = models.PositiveIntegerField(blank=True, null=True)

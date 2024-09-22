@@ -96,3 +96,41 @@ Overriding get_object:
 The get_object() method is overridden in both views to enforce that only the author of a post or comment can update or delete it.
 If a user tries to modify or delete a post or comment they do not own, they will receive a PermissionDenied error, ensuring
 only authors can manage their own content.
+
+task 2 :
+FollowUserView:
+Extends GenericAPIView
+Overriding the post method:
+The post method is overridden to handle the logic of following another user.
+Retrieve the user to follow: user_to_follow = get_object_or_404(CustomUser, id=user_id) retrieves the user that the logged-in user wants to follow. If the user with the given user_id does not exist, a 404 Not Found error is raised.
+Following the user: request.user.follow(user_to_follow) calls the follow helper method from the CustomUser model, adding the selected user to the following list of the logged-in user.
+Creating a notification: After successfully following the user, i create a notification
+Notification.objects.create(
+    recipient=user_to_follow,  # The user who is followed
+    actor=request.user,  # The user who is following
+    verb='followed',  # The action performed
+    target=user_to_follow  # The target of the action
+)
+Returning the response: You then return a success message indicating that the current user is now following the other user.
+Similar Structure to FollowUserView:
+The process is similar to the FollowUserView. The post method handles the logic for unfollowing a user.
+Retrieve the user to unfollow: user_to_unfollow = get_object_or_404(CustomUser, id=user_id) fetches the user that the current user wants to unfollow.
+Unfollowing the user: request.user.unfollow(user_to_unfollow) removes the selected user from the following list of the current user.
+Creating a notification: After the unfollow action is completed, a notification is created with the verb 'unfollowed':
+python
+Copy code
+Notification.objects.create(
+    recipient=user_to_unfollow,  # The user who is being unfollowed
+    actor=request.user,  # The user who is unfollowing
+    verb='unfollowed',  # The action performed
+    target=user_to_unfollow  # The target of the action
+)
+This notifies the unfollowed user of the action.
+Returning the response: You return a success message indicating that the current user has unfollowed the user.
+
+now for FeedVIew:
+et_queryset(self): This method is overridden to customize the data that the view returns. Here's how it works:
+user = self.request.user: It retrieves the currently authenticated user from the request.
+following_users = user.following.all(): This fetches all users that the authenticated user is following
+return Post.objects.filter(author__in=following_users).order_by('-created_at'): This query retrieves all Post objects whose
+authors are in the list of followed users. The results are ordered by the created_at timestamp in descending order

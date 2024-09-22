@@ -134,3 +134,56 @@ user = self.request.user: It retrieves the currently authenticated user from the
 following_users = user.following.all(): This fetches all users that the authenticated user is following
 return Post.objects.filter(author__in=following_users).order_by('-created_at'): This query retrieves all Post objects whose
 authors are in the list of followed users. The results are ordered by the created_at timestamp in descending order
+
+Like and Unlike System
+Like Model
+The Like model tracks which users have liked which posts. It includes:
+
+post: A foreign key to the Post model, representing the post that is liked.
+user: A foreign key to the CustomUser model, representing the user who liked the post.
+Unique Constraint: Users can only like a post once (unique_together = ('post', 'user')).
+String Representation: The __str__ method returns a string showing which user liked which post.
+
+LikePostView:
+permission_classes = [permissions.IsAuthenticated]:
+Ensures only authenticated users can like a post.
+post(self, request, pk):
+Retrieve Post: The post is retrieved using generics.get_object_or_404(Post, pk=pk). If the post with the given primary key (pk)
+doesn’t exist, a 404 error is raised.
+Create or Get Like: Like.objects.get_or_create(user=request.user, post=post) either creates a new Like object if it doesn’t
+exist or retrieves an existing one.
+Handling Duplicate Likes: If the like already exists (i.e., the user has already liked the post), the view returns an error
+response: 'you have already liked this post'.
+
+UnlikePostView:
+permission_classes = [permissions.IsAuthenticated]:
+
+Ensures only authenticated users can unlike a post.
+post(self, request, pk):
+
+Retrieve Post: The post is retrieved using generics.get_object_or_404(Post, pk=pk). If the post with the given primary key (pk)
+doesn’t exist, a 404 error is raised.
+Check If Liked: The view checks if the user has already liked the post by filtering for a Like object. If no like is found,
+it returns an error: 'you have not liked this post'
+Notification Model
+. Recipient:
+recipient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='notifications'):
+This represents the user who will receive the notification. It's a foreign key to the CustomUser model.
+Actor:
+actor = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='actor_notifications'):
+This represents the user who performed the action
+Verb:
+verb = models.CharField(max_length=150):
+This is a string that describes the action that triggered the notification. For example, this could be 'liked', 'followed',
+or 'commented on'
+
+Target (Generic Foreign Key):
+The target is the object that the action was performed on This uses Django’s Generic ForeignKey
+mechanism to allow the notification to refer to any model.
+target_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True):
+This is a foreign key to Django’s ContentType model, which allows the target to be any model
+target_object_id = models.PositiveIntegerField(blank=True, null=True):
+This is the primary key (id) of the object being referred to
+target = GenericForeignKey('target_content_type', 'target_object_id'):
+Generic ForeignKey: The combination of target_content_type and target_object_id creates a Generic ForeignKey, which allows
+the Notification model to point to instances of any model. This is how the target can be any object, like a post or comment.
